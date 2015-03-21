@@ -1,3 +1,4 @@
+import operator
 import click
 import SoftLayer
 import yaml
@@ -13,13 +14,19 @@ def cli(setting):
     client = SoftLayer.Client()
 
     vsi = SoftLayer.VSManager(client)
-    result = vsi.verify_create_instance(**params)
-    pprint(result)
+    total = (0.0, 0.0)
+    for hostname, param in params.items():
+        param.setdefault('hostname', hostname)
 
-    pprint(calcurate_total(result))
+        result = vsi.verify_create_instance(**param)
+        pprint(result)
+
+        tmp_total = calcurate_total(result)
+        total = map(operator.add, total, tmp_total)
+        pprint(tmp_total)
 
     # result = vsi.create_instance(**params)
-    # pprint(result)
+    pprint(total)
 
 def calcurate_total(result):
     total_monthly = 0.0
