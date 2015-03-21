@@ -17,8 +17,8 @@ vs000:
   #ssh_keys:
   #  - hssh@hssh.jp
 vs001: 
-  cpus: 2
-  memory: 2048
+  cpus: 1
+  memory: 1024
   hourly: true
   domain: sl.hssh.jp
   local_disk: true

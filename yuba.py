@@ -32,8 +32,17 @@ def cli(setting, order):
 
     if order:
         print 'Ordering instances...'
-        # result = vsi.create_instances(instance_settings)
-        # pprint(result)
+        result = vsi.create_instances(instance_settings)
+        pprint(result)
+
+        not_available = []
+        for tmp in result:
+            machine_id = tmp['id']
+            if not vsi.wait_for_ready(machine_id, 600, pending=True):
+                print 'machine_id: %s is not available' % machine_id
+                not_available.append(machine_id)
+            else:
+                print 'machine_id: %s is available' % machine_id
 
 def calculate_total(result):
     total_monthly = 0.0
