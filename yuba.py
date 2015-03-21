@@ -16,5 +16,18 @@ def cli(setting):
     result = vsi.verify_create_instance(**params)
     pprint(result)
 
+    pprint(calcurate_total(result))
+
     # result = vsi.create_instance(**params)
     # pprint(result)
+
+def calcurate_total(result):
+    total_monthly = 0.0
+    total_hourly = 0.0
+
+    for price in result['prices']:
+        total_monthly += float(price.get('recurringFee', 0.0))
+        total_hourly += float(price.get('hourlyRecurringFee', 0.0))
+
+    return total_monthly, total_hourly
+
