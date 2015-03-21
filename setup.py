@@ -6,6 +6,8 @@ setup(
     py_modules=['yuba'],
     install_requires = [
         'Click',
+        'SoftLayer',
+        'pyYAML',
     ],
     entry_points = '''
         [console_scripts]
