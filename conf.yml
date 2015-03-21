@@ -33,21 +33,3 @@ vs001:
   private: false
   #ssh_keys:
   #  - hssh@hssh.jp
-
-vs002: 
-  cpus: 2
-  memory: 2048
-  hourly: false
-  domain: sl.hssh.jp
-  local_disk: true
-  datacenter: tok02
-  os_code: CENTOS_7_64
-  #image_id: e9081797-ae1f-42e1-9e3a-c3fb75b720de
-  dedicated: false
-  #public_vlan: null
-  #private_vlan: null
-  disks: [25]
-  #post_uri: null
-  private: false
-  #ssh_keys:
-  #  - hssh@hssh.jp

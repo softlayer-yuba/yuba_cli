@@ -14,6 +14,7 @@ def cli(setting):
     client = SoftLayer.Client()
 
     vsi = SoftLayer.VSManager(client)
+    instance_settings = []
     total = (0.0, 0.0)
     for hostname, param in params.items():
         param.setdefault('hostname', hostname)
@@ -21,14 +22,17 @@ def cli(setting):
         result = vsi.verify_create_instance(**param)
         pprint(result)
 
-        tmp_total = calcurate_total(result)
+        tmp_total = calculate_total(result)
         total = map(operator.add, total, tmp_total)
         pprint(tmp_total)
 
-    # result = vsi.create_instance(**params)
-    pprint(total)
+        instance_settings.append(param)
 
-def calcurate_total(result):
+    result = vsi.create_instances(instance_settings)
+    pprint(total)
+    pprint(result)
+
+def calculate_total(result):
     total_monthly = 0.0
     total_hourly = 0.0
 
