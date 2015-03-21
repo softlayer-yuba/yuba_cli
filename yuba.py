@@ -7,9 +7,10 @@ from pprint import pprint
 
 @click.command()
 @click.argument('setting', type=click.File('r'), required=True)
-def cli(setting):
+@click.option('--order/--no-order', default=False, help='Order instances')
+def cli(setting, order):
     params = yaml.load(setting)
-    print params
+    pprint(params)
 
     client = SoftLayer.Client()
 
@@ -27,10 +28,12 @@ def cli(setting):
         pprint(tmp_total)
 
         instance_settings.append(param)
-
-    result = vsi.create_instances(instance_settings)
     pprint(total)
-    pprint(result)
+
+    if order:
+        print 'Ordering instances...'
+        # result = vsi.create_instances(instance_settings)
+        # pprint(result)
 
 def calculate_total(result):
     total_monthly = 0.0
@@ -41,4 +44,3 @@ def calculate_total(result):
         total_hourly += float(price.get('hourlyRecurringFee', 0.0))
 
     return total_monthly, total_hourly
-
