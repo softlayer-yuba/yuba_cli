@@ -1,9 +1,9 @@
-vs000: 
+vs000:
   cpus: 1
   memory: 1024
   hourly: true
   hostname: vs000
-  domain: sl.hssh.jp
+  domain: {{ default.domain }}
   local_disk: true
   datacenter: tok02
   os_code: CENTOS_7_64
@@ -16,11 +16,11 @@ vs000:
   private: false
   #ssh_keys:
   #  - hssh@hssh.jp
-vs001: 
+vs001:
   cpus: 1
   memory: 1024
   hourly: true
-  domain: sl.hssh.jp
+  domain: {{ default.domain }}
   local_disk: true
   datacenter: tok02
   os_code: CENTOS_7_64

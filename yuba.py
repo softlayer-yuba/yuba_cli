@@ -1,15 +1,19 @@
 import operator
+from os.path import expanduser
 import click
 import SoftLayer
 import yaml
+from jinja2 import Template
 
 from pprint import pprint
 
 @click.command()
 @click.argument('setting', type=click.File('r'), required=True)
+@click.option('--config', type=click.File('r'), default=expanduser('~/.yuba/config.yml'))
 @click.option('--order/--no-order', default=False, help='Order instances')
-def cli(setting, order):
-    params = yaml.load(setting)
+def cli(setting, config, order):
+    config = yaml.load(config)
+    params = yaml.load(Template(setting.read()).render(config))
     pprint(params)
 
     client = SoftLayer.Client()
