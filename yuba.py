@@ -7,11 +7,16 @@ from jinja2 import Template
 
 from pprint import pprint
 
-@click.command()
+@click.group()
+@click.pass_context
+def cli(ctx):
+    pass
+
+@cli.command()
 @click.argument('setting', type=click.File('r'), required=True)
 @click.option('--config', type=click.File('r'), default=expanduser('~/.yuba/config.yml'))
 @click.option('--order/--no-order', default=False, help='Order instances')
-def cli(setting, config, order):
+def cost(setting, config, order):
     config = yaml.load(config)
     params = yaml.load(Template(setting.read()).render(config))
     pprint(params)
