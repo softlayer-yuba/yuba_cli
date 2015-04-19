@@ -1,12 +1,14 @@
+# coding=utf-8
 import operator
 from os.path import expanduser
 import click
 import SoftLayer
 from SoftLayer.CLI import formatting
+from SoftLayer.managers import hardware
 import yaml
 from jinja2 import Template
-
 from pprint import pprint
+
 
 @click.group()
 @click.option('--debug/--no-debug', default=False)
@@ -15,9 +17,11 @@ def cli(ctx, debug):
     ctx.obj = {}
     ctx.obj['DEBUG'] = debug
 
+
 @cli.command()
 @click.argument('setting', type=click.File('r'), required=True)
-@click.option('--config', type=click.File('r'), default=expanduser('~/.yuba/config.yml'))
+@click.option('--config', type=click.File('r'),
+              default=expanduser('~/.yuba/config.yml'))
 @click.pass_context
 def cost(ctx, setting, config):
     config = yaml.load(config)
@@ -27,8 +31,9 @@ def cost(ctx, setting, config):
 
     client = SoftLayer.Client()
 
-    vsi = SoftLayer.VSManager(client)
-    instance_settings = []
+    vsm = SoftLayer.VSManager(client)
+    hsm = SoftLayer.HardwareManager(client)
+
     total = (0.0, 0.0)
     total_result = formatting.Table(['hostname', 'monthly', 'hourly'])
     for param in params:
@@ -36,10 +41,34 @@ def cost(ctx, setting, config):
         price_table.align['name'] = 'l'
         price_table.align['monthly'] = 'r'
         price_table.align['hourly'] = 'r'
-        param.setdefault('hostname', param['hostname'])
 
-        result = vsi.verify_create_instance(**param)
-        
+        result = {}
+        type = param.pop('type')
+
+        if type == 'Virtual_Guest':
+            result = vsm.verify_create_instance(**param)
+
+        elif type == 'Hardware_Server':
+            # ### dedicated server 作成オプションデフォルト値取得例
+            #
+            # ```
+            # package_ids = hsm.get_available_dedicated_server_packages()
+            # pprint(package_ids)
+            # options = hsm.get_dedicated_server_create_options(147)
+            # for k, v in options['categories'].items():
+            #     pprint([k, hardware.get_default_value(options, k, True)])
+            # ```
+            #
+            # ### bare-metal server 作成オプションデフォルト値取得例
+            #
+            # ```
+            # options = hsm.get_bare_metal_create_options()
+            # for k, v in options['categories'].items():
+            #     pprint([k, hardware.get_default_value(options, k, True)])
+            # pprint(hsm.get_bare_metal_package_id()) # 常に50
+            # ```
+            result = hsm.verify_order(**param)
+
         for v in result['prices']:
             price_table.add_row([
                 v['item']['description'],
@@ -47,22 +76,19 @@ def cost(ctx, setting, config):
                 v.get('hourlyRecurringFee'),
             ])
         print formatting.format_output(price_table)
+        price_table.rows = []
 
         tmp_total = calculate_total(result)
         total = map(operator.add, total, tmp_total)
 
         table_row = list(tmp_total)
         table_row.insert(0, param['hostname'])
-        pprint(param['hostname'])
         total_result.add_row(table_row)
-
-        instance_settings.append(param)
 
     total.insert(0, 'total')
     total_result.add_row(['-----', '-----', '-----'])
     total_result.add_row(total)
     print formatting.format_output(total_result)
-
 
 
 def calculate_total(result):
@@ -75,9 +101,11 @@ def calculate_total(result):
 
     return total_monthly, total_hourly
 
+
 @cli.command()
 @click.argument('setting', type=click.File('r'), required=True)
-@click.option('--config', type=click.File('r'), default=expanduser('~/.yuba/config.yml'))
+@click.option('--config', type=click.File('r'),
+              default=expanduser('~/.yuba/config.yml'))
 @click.option('--order/--no-order', default=False, help='Order instances')
 def order(setting, config, order):
     config = yaml.load(config)

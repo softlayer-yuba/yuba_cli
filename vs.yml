@@ -1,5 +1,6 @@
-{% for i in range(5) %}
+{% for i in range(3) %}
 -
+  type: 'Virtual_Guest'
   cpus: 1
   memory: 1024
   hourly: true
@@ -15,6 +16,25 @@
   disks: [25]
   #post_uri: null
   private: false
-  #ssh_keys:
-  #  - keyname
+  #ssh_keys: [keyname]
+{% endfor %}
+{% for i in range(3) %}
+-
+  type: 'Hardware_Server'
+  server: 17410
+  hostname: {{ 'hs%03d' | format(i) }}
+  domain: {{ default.domain }}
+  hourly: false
+  location: TOKYO
+  os: 44988 # CentOS 7.x
+  disks: [21616, 21616, 21616]
+  port_speed: 21525
+  bare_metal: false
+  ram: 46901
+  package_id: 147
+  disk_controller: 1916
+#  ssh_keys: [keyname]
+#  public_vlan:
+#  private_vlan:
+#  post_uri: null
 {% endfor %}
