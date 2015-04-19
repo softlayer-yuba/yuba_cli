@@ -30,7 +30,7 @@ def cost(ctx, setting, config):
     vsi = SoftLayer.VSManager(client)
     instance_settings = []
     total = (0.0, 0.0)
-    total_result = formatting.Table(['monthly', 'hourly'])
+    total_result = formatting.Table(['hostname', 'monthly', 'hourly'])
     for hostname, param in params.items():
         price_table = formatting.Table(['name', 'monthly', 'hourly'])
         price_table.align['name'] = 'l'
@@ -51,7 +51,14 @@ def cost(ctx, setting, config):
         tmp_total = calculate_total(result)
         total = map(operator.add, total, tmp_total)
 
+        table_row = list(tmp_total)
+        table_row.insert(0, hostname)
+        total_result.add_row(table_row)
+
         instance_settings.append(param)
+
+    total.insert(0, 'total')
+    total_result.add_row(['-----', '-----', '-----'])
     total_result.add_row(total)
     print formatting.format_output(total_result)
 
