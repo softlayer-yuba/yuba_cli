@@ -31,12 +31,12 @@ def cost(ctx, setting, config):
     instance_settings = []
     total = (0.0, 0.0)
     total_result = formatting.Table(['hostname', 'monthly', 'hourly'])
-    for hostname, param in params.items():
+    for param in params:
         price_table = formatting.Table(['name', 'monthly', 'hourly'])
         price_table.align['name'] = 'l'
         price_table.align['monthly'] = 'r'
         price_table.align['hourly'] = 'r'
-        param.setdefault('hostname', hostname)
+        param.setdefault('hostname', param['hostname'])
 
         result = vsi.verify_create_instance(**param)
         
@@ -52,7 +52,8 @@ def cost(ctx, setting, config):
         total = map(operator.add, total, tmp_total)
 
         table_row = list(tmp_total)
-        table_row.insert(0, hostname)
+        table_row.insert(0, param['hostname'])
+        pprint(param['hostname'])
         total_result.add_row(table_row)
 
         instance_settings.append(param)
