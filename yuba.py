@@ -15,8 +15,7 @@ def cli(ctx):
 @cli.command()
 @click.argument('setting', type=click.File('r'), required=True)
 @click.option('--config', type=click.File('r'), default=expanduser('~/.yuba/config.yml'))
-@click.option('--order/--no-order', default=False, help='Order instances')
-def cost(setting, config, order):
+def cost(setting, config):
     config = yaml.load(config)
     params = yaml.load(Template(setting.read()).render(config))
     pprint(params)
@@ -39,6 +38,32 @@ def cost(setting, config, order):
         instance_settings.append(param)
     pprint(total)
 
+
+
+def calculate_total(result):
+    total_monthly = 0.0
+    total_hourly = 0.0
+
+    for price in result['prices']:
+        total_monthly += float(price.get('recurringFee', 0.0))
+        total_hourly += float(price.get('hourlyRecurringFee', 0.0))
+
+    return total_monthly, total_hourly
+
+@cli.command()
+@click.argument('setting', type=click.File('r'), required=True)
+@click.option('--config', type=click.File('r'), default=expanduser('~/.yuba/config.yml'))
+@click.option('--order/--no-order', default=False, help='Order instances')
+def order(setting, config, order):
+    config = yaml.load(config)
+    params = yaml.load(Template(setting.read()).render(config))
+    pprint(params)
+
+    client = SoftLayer.Client()
+
+    vsi = SoftLayer.VSManager(client)
+    instance_settings = [v for v in params.values()]
+
     if order:
         print 'Ordering instances...'
         result = vsi.create_instances(instance_settings)
@@ -53,12 +78,3 @@ def cost(setting, config, order):
             else:
                 print 'machine_id: %s is available' % machine_id
 
-def calculate_total(result):
-    total_monthly = 0.0
-    total_hourly = 0.0
-
-    for price in result['prices']:
-        total_monthly += float(price.get('recurringFee', 0.0))
-        total_hourly += float(price.get('hourlyRecurringFee', 0.0))
-
-    return total_monthly, total_hourly
