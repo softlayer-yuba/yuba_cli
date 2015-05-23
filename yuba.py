@@ -17,7 +17,6 @@ def cli(ctx, debug):
     ctx.obj = {}
     ctx.obj['DEBUG'] = debug
 
-
 @cli.command()
 @click.argument('setting', type=click.File('r'), required=True)
 @click.option('--config', type=click.File('r'),
