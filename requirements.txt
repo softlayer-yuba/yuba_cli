@@ -1,7 +1,9 @@
 click==4.0
 docopt==0.6.1
 Jinja2==2.7.3
+linecache2==1.0.0
 MarkupSafe==0.23
+mock==1.0.1
 pluggy==0.3.0
 prettytable==0.7.2
 py==1.4.27
@@ -10,4 +12,6 @@ requests==2.7.0
 six==1.9.0
 SoftLayer==4.0.2
 tox==2.0.1
+traceback2==1.4.0
+unittest2==1.0.1
 virtualenv==13.0.1
