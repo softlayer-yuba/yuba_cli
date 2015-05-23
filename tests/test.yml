@@ -1,0 +1,37 @@
+{% for i in range(1) %}
+-
+  type: 'Virtual_Guest'
+  cpus: 1
+  memory: 1024
+  hourly: true
+  hostname: {{ 'vs%03d' | format(i) }}
+  domain: {{ default.domain }}
+  local_disk: true
+  datacenter: tok02
+  os_code: CENTOS_7_64
+  #image_id: e9081797-ae1f-42e1-9e3a-c3fb75b720de
+  dedicated: false
+  #public_vlan: null
+  #private_vlan: null
+  disks: [25]
+  #post_uri: null
+  private: false
+  #ssh_keys: [keyname]
+{% endfor %}
+{% for i in range(1) %}
+-
+  type: 'Hardware_Server'
+  size: 'D2690_128GB_2X600GBSAS_RAID1'
+  hostname: {{ 'hs%03d' | format(i) }}
+  domain: {{ default.domain }}
+  location: 'tok02'
+  os: 'CENTOS_7_64'
+  port_speed: 1000
+#  ssh_keys: [keyname]
+#  public_vlan:
+#  private_vlan:
+#  post_uri: null
+  hourly: false
+#  no_public: false
+#  extras: []
+{% endfor %}
