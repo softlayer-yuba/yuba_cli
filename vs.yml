@@ -21,20 +21,17 @@
 {% for i in range(3) %}
 -
   type: 'Hardware_Server'
-  server: 17410
+  size: 'D2690_128GB_2X600GBSAS_RAID1'
   hostname: {{ 'hs%03d' | format(i) }}
   domain: {{ default.domain }}
-  hourly: false
-  location: TOKYO
-  os: 44988 # CentOS 7.x
-  disks: [21616, 21616, 21616]
-  port_speed: 21525
-  bare_metal: false
-  ram: 46901
-  package_id: 147
-  disk_controller: 1916
+  location: 'tok02'
+  os: 'CENTOS_7_64'
+  port_speed: 1000
 #  ssh_keys: [keyname]
 #  public_vlan:
 #  private_vlan:
 #  post_uri: null
+  hourly: false
+#  no_public: false
+#  extras: []
 {% endfor %}
