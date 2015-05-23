@@ -11,7 +11,7 @@ class CostTest(testing.TestCase):
 
     def run_command(self, *args, **kwargs):
         runner = click_testing.CliRunner()
-        return runner.invoke(yuba.cli, args=args)
+        return runner.invoke(yuba.cli, args=args, obj=self.env)
 
     def test_cost(self):
         ret = self.run_command('cost')
@@ -20,6 +20,3 @@ class CostTest(testing.TestCase):
         test_file = os.path.join(os.path.dirname(__file__), 'test.yml')
         ret = self.run_command('cost', test_file)
         self.assertEqual(ret.exit_code, 0)
-
-
-

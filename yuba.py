@@ -4,6 +4,7 @@ from os.path import expanduser
 import click
 import SoftLayer
 from SoftLayer.CLI import formatting
+from SoftLayer.CLI import environment
 from SoftLayer.managers import hardware
 import yaml
 from jinja2 import Template
@@ -14,8 +15,10 @@ from pprint import pprint
 @click.option('--debug/--no-debug', default=False)
 @click.pass_context
 def cli(ctx, debug):
-    ctx.obj = {}
-    ctx.obj['DEBUG'] = debug
+    env = ctx.ensure_object(environment.Environment)
+    if env.client is None:
+        env.client = SoftLayer.create_client_from_env()
+
 
 @cli.command()
 @click.argument('setting', type=click.File('r'), required=True)
@@ -25,10 +28,8 @@ def cli(ctx, debug):
 def cost(ctx, setting, config):
     config = yaml.load(config)
     params = yaml.load(Template(setting.read()).render(config))
-    if ctx.obj['DEBUG']:
-        pprint(params)
 
-    client = SoftLayer.Client()
+    client = ctx.ensure_object(environment.Environment).client
 
     vsm = SoftLayer.VSManager(client)
     hsm = SoftLayer.HardwareManager(client)
