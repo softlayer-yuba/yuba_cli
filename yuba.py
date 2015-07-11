@@ -4,7 +4,7 @@ from os.path import expanduser
 import click
 import SoftLayer
 from SoftLayer.CLI import formatting
-from SoftLayer.managers import hardware
+# from SoftLayer.managers import hardware
 import yaml
 from jinja2 import Template
 from pprint import pprint
