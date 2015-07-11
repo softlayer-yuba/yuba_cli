@@ -1,5 +1,4 @@
 # coding=utf-8
-import operator
 from os.path import expanduser
 import click
 import SoftLayer
