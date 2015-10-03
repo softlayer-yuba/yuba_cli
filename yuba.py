@@ -4,7 +4,7 @@ from os.path import expanduser
 import click
 import SoftLayer
 from SoftLayer.CLI import formatting
-from SoftLayer.managers import hardware
+# from SoftLayer.managers import hardware
 import yaml
 from jinja2 import Template
 from pprint import pprint
@@ -16,6 +16,7 @@ from pprint import pprint
 def cli(ctx, debug):
     ctx.obj = {}
     ctx.obj['DEBUG'] = debug
+
 
 @cli.command()
 @click.argument('setting', type=click.File('r'), required=True)
@@ -129,4 +130,3 @@ def order(setting, config, order):
                 not_available.append(machine_id)
             else:
                 print 'machine_id: %s is available' % machine_id
-

@@ -1,3 +1,3 @@
 # -*- coding: utf-8 -*-
 
-from .cost import *
+from .cost import *  # noqa
