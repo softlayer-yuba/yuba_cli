@@ -2,10 +2,10 @@ machine:
   python:
     version: 2.7.9
 
-#dependencies:
-#  pre:
-#    - pip install -r requirements.txt
-#    - pip uninstall yuba_cli -y || true
+dependencies:
+  pre:
+    - pip install -r requirements.txt
+    - pip uninstall yuba_cli -y || true
 #test:
 #  pre:
 #    - flake8 .
