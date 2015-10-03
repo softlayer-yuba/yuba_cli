@@ -24,4 +24,4 @@ tox==2.0.1
 traceback2==1.4.0
 unittest2==1.0.1
 virtualenv==13.0.1
-# -e git+https://github.com/softlayer-yuba/yuba_cli@965612a7e992b2baf36e662edd7adf1f665fba15#egg=yuba_cli-feature_11_circleci_test
+-e git+https://github.com/softlayer-yuba/yuba_cli@965612a7e992b2baf36e662edd7adf1f665fba15#egg=yuba_cli-feature_11_circleci_test
